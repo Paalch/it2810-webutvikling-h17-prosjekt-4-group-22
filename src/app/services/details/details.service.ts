@@ -12,6 +12,11 @@ export class DetailsService {
     private http: Http
   ) {}
 
+  /**
+   * get details for a given movie
+   * @param card
+   * @returns {Promise<CardElement>}
+   */
   async getDetails(card) {
     try {
       const response = await this.http.get(this.URL + '/' + card.type + '/' + card.id).toPromise()

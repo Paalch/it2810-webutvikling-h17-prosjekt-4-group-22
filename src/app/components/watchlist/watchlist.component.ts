@@ -13,6 +13,8 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   order: string
   orderBy: string
   search: string
+  years: string
+  ratings: string
   private sub: any
   public getListElements: Function
 
@@ -24,13 +26,15 @@ export class WatchlistComponent implements OnInit, OnDestroy {
       this.type = params['type'] || 'movie'
       this.orderBy = params['orderBy'] || 'title'
       this.search = params['search'] || ''
+      this.years = params['years'] || ''
+      this.ratings = params['ratings'] || ''
       if (this.type === 'movie') {
-        await this.watchlistService.getWatchlistMovie(this.order, this.orderBy, this.search, true)
+        await this.watchlistService.getWatchlistMovie(this.order, this.orderBy, this.search, this.ratings, this.years , true)
       } else {
-        await this.watchlistService.getWatchlistTv(this.order, this.orderBy, this.search, true)
+        await this.watchlistService.getWatchlistTv(this.order, this.orderBy, this.search, this.ratings, this.years, true)
       }
     })
-    this.watchlistService.getWatchlistMovie(this.order, this.orderBy, this.search, true)
+    this.watchlistService.getWatchlistMovie(this.order, this.orderBy, this.search, this.ratings, this.years,  true)
     this.getListElements = this.getList.bind(this)
   }
   ngOnDestroy() {
@@ -50,6 +54,6 @@ export class WatchlistComponent implements OnInit, OnDestroy {
   }
 
   async appendWatchlist() {
-    await this.watchlistService.getNext(this.type, this.order, this.orderBy, this.search)
+    await this.watchlistService.getNext(this.type, this.order, this.orderBy, this.search, this.ratings, this.years)
   }
 }

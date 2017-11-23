@@ -13,6 +13,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
   order: string
   orderBy: string
   search: string
+  years: string
+  ratings: string
   private sub: any
   getListElements: Function
 
@@ -27,13 +29,15 @@ export class LibraryComponent implements OnInit, OnDestroy {
         this.type = params['type'] || 'movie'
         this.orderBy = params['orderBy'] || 'title'
         this.search = params['search'] || ''
+        this.years = params['years'] || ''
+        this.ratings = params['ratings'] || ''
         if (this.type === 'movie') {
-          await this.libraryService.getLibraryMovie(this.order, this.orderBy, this.search, true)
+          await this.libraryService.getLibraryMovie(this.order, this.orderBy, this.search, this.ratings, this.years, true)
         } else {
-          await this.libraryService.getLibraryTv(this.order, this.orderBy, this.search, true)
+          await this.libraryService.getLibraryTv(this.order, this.orderBy, this.search, this.ratings, this.years, true)
         }
       })
-    await this.libraryService.getLibraryMovie(this.order, this.orderBy, this.search, true)
+    await this.libraryService.getLibraryMovie(this.order, this.orderBy, this.search, this.ratings, this.years, true)
     this.getListElements = this.getList.bind(this)
   }
   ngOnDestroy() {
@@ -51,6 +55,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
     }
   }
   async appendLibrary() {
-    await this.libraryService.getNext(this.type, this.order, this.orderBy, this.search)
+    await this.libraryService.getNext(this.type, this.order, this.orderBy, this.search, this.ratings, this.years)
   }
 }

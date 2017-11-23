@@ -63,42 +63,88 @@ export class WatchlistService {
       console.error(err)
     }
   }
-  public async getWatchlist(order = '', orderBy = '', search = '', reset= false) {
-    this.getWatchlistMovie(order, orderBy, search, reset)
-    this.getWatchlistTv(order, orderBy, search, reset)
+
+  /**
+   * getWAtchlist, gets the watchlist for the current user by getting tv and movies
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} reset
+   * @returns {Promise<void>}
+   */
+  public async getWatchlist(order = '', orderBy = '', search = '', ratings = '', years = '', reset= false) {
+    this.getWatchlistMovie(order, orderBy, search, ratings, years, reset)
+    this.getWatchlistTv(order, orderBy, search, ratings, years, reset )
   }
 
-  public async getWatchlistMovie(order = '', orderBy = '', search = '', reset= false) {
+  /**
+   * Public function for getting watchlist
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} reset
+   * @returns {Promise<void>}
+   */
+  public async getWatchlistMovie(order = '', orderBy = '', search = '', ratings = '', years = '', reset= false) {
     if (reset) {
       this.currentMoviePageID = 1
     }
-    await this.getWatchlistServerMovie(order, orderBy, search)
+    await this.getWatchlistServerMovie(order, orderBy, search, 1, ratings, years)
 
     while (this.moviePageID < this.currentMoviePageID) {
       this.moviePageID++
-      await this.getWatchlistServerMovie(order, orderBy, search, this.moviePageID , true )
+      await this.getWatchlistServerMovie(order, orderBy, search, this.moviePageID , ratings , years , true )
     }
     this.loadButton = this.currentMoviePageID < this.movieMaxPageID ? true : false
   }
-  public async getWatchlistTv(order = '', orderBy = '', search = '', reset= false) {
+
+  /**
+   * Public function for getting watchlist
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} reset
+   * @returns {Promise<void>}
+   */
+  public async getWatchlistTv(order = '', orderBy = '', search = '', ratings = '', years = '', reset= false) {
     if (reset) {
       this.currentTvPageID = 1
     }
-    await this.getWatchlistServerTv(order, orderBy, search)
+    await this.getWatchlistServerTv(order, orderBy, search, 1, ratings, years )
     while (this.tvPageID < this.currentTvPageID) {
       this.tvPageID++
-      await this.getWatchlistServerTv(order, orderBy, search, this.tvPageID , true )
+      await this.getWatchlistServerTv(order, orderBy, search, this.tvPageID , ratings , years ,  true )
     }
     this.loadButton = this.currentTvPageID < this.tvMaxPageID ? true : false
   }
-  private async getWatchlistServerMovie(order = '', orderBy = '', search = '', page = 1, append = false ) {
+
+  /**
+   * Dose the get watchlist movie call
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {number} page
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} append
+   * @returns {Promise<void>}
+   */
+  private async getWatchlistServerMovie(order = '', orderBy = '', search = '', page = 1, ratings = '', years = '', append = false ) {
     try {
       const response = await this.http.get(this.URL + '/movie', {
         params: {
           page: page,
           order: order,
           orderBy: orderBy,
-          search: search
+          search: search,
+          years: years,
+          ratings: ratings
         }
       }).toPromise()
       if (response.status === 200) {
@@ -108,13 +154,27 @@ export class WatchlistService {
       console.error(err)
     }
   }
-  private async getWatchlistServerTv(order = '', orderBy = '', search = '', page = 1, append = false ) {
+
+  /**
+   * Gets the watchlisttv from server
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {number} page
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} append
+   * @returns {Promise<void>}
+   */
+  private async getWatchlistServerTv(order = '', orderBy = '', search = '', page = 1, ratings = '', years = '', append = false ) {
     try {
       const response = await this.http.get(this.URL + '/tv', { params: {
         page: page,
         order: order,
         orderBy: orderBy,
-        search: search
+        search: search,
+        years: years,
+        ratings: ratings
       }}).toPromise()
       if (response.status === 200) {
         this.reconfigure(response.json(), 'tv', append)
@@ -124,6 +184,12 @@ export class WatchlistService {
     }
   }
 
+  /**
+   * creates cardElements from the response
+   * @param json
+   * @param type
+   * @param {boolean} append
+   */
   private reconfigure(json, type, append = false) {
     switch (type) {
       case('movie'):
@@ -156,20 +222,36 @@ export class WatchlistService {
         break
     }
   }
-  public async getNext(type, order = '', orderBy = '', search = '') {
+
+  /**
+   * Function is called to get the nect page
+   * @param type
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @returns {Promise<void>}
+   */
+  public async getNext(type, order = '', orderBy = '', search = '', ratings = '', years = '') {
     if ( type === 'movie') {
       this.moviePageID++
       this.currentMoviePageID++
-      await this.getWatchlistServerMovie(order, orderBy, search, this.moviePageID , true )
+      await this.getWatchlistServerMovie(order, orderBy, search, this.moviePageID , ratings, years, true )
       this.loadButton =  this.currentMoviePageID < this.movieMaxPageID ? true : false
     } else {
       this.tvPageID++
       this.currentTvPageID++
-      await this.getWatchlistServerTv(order, orderBy, search, this.tvPageID , true )
+      await this.getWatchlistServerTv(order, orderBy, search, this.tvPageID , ratings, years, true )
       this.loadButton =  this.currentTvPageID < this.tvMaxPageID ? true : false
     }
   }
 
+  /**
+   * Checks if watchlist is empty
+   * @param type
+   * @returns {boolean}
+   */
   public isEmpty(type): boolean {
     switch (type) {
       case 'movie': {

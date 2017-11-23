@@ -21,6 +21,10 @@ export class FilterComponent implements OnInit {
   searchValue: string
   currentSort: string
   highlightedDiv: number
+  toRating: number
+  fromRating: number
+  toDate: number
+  fromDate: number
 
   constructor(
     private libraryService: LibraryService,
@@ -125,6 +129,8 @@ export class FilterComponent implements OnInit {
     queryParams['type'] = this.type
     queryParams['orderBy'] = this.currentSort
     queryParams['search'] = this.searchValue
+    queryParams['years'] = this.fromDate + '-' + this.toDate
+    queryParams['ratings'] = this.fromRating + '-' + this.toRating
     this.router.navigate([this.url], { queryParams: queryParams })
   }
   toggleHighlight(newValue: number) {
@@ -133,5 +139,21 @@ export class FilterComponent implements OnInit {
     } else {
       this.highlightedDiv = newValue
     }
+  }
+  onDateToChange(event) {
+    this.toDate = event || ''
+    this.setQueryParms()
+  }
+  onDateFromChange(event) {
+    this.fromDate = event || ''
+    this.setQueryParms()
+  }
+  onRatingFromChange(event) {
+    this.fromRating = event || ''
+    this.setQueryParms()
+  }
+  onRatingToChange(event) {
+    this.toRating = event || ''
+    this.setQueryParms()
   }
 }

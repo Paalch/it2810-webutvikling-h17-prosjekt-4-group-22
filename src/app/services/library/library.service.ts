@@ -67,41 +67,84 @@ export class LibraryService {
     }
   }
 
-  public async getLibrary(order = '', orderBy = '', search = '', reset= false) {
-    this.getLibraryMovie(order, orderBy, search, reset)
-    this.getLibraryTv(order, orderBy, search, reset)
+  /**
+   * Gets the whole library from server
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} reset
+   * @returns {Promise<void>}
+   */
+  public async getLibrary(order = '', orderBy = '', search = '', ratings = '', years= '', reset= false) {
+    this.getLibraryMovie(order, orderBy, search, ratings, years, reset)
+    this.getLibraryTv(order, orderBy, search, ratings, years, reset)
   }
 
-  public async getLibraryMovie(order = '', orderBy = '', search = '', reset= false) {
+  /**
+   * Loads the movies in library
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} reset
+   * @returns {Promise<void>}
+   */
+  public async getLibraryMovie(order = '', orderBy = '', search = '', ratings = '', years= '', reset= false) {
     if (reset) {
       this.currentMoviePageID = 1
     }
-    await this.getLibraryServerMovie(order, orderBy, search)
+    await this.getLibraryServerMovie(order, orderBy, search,1, ratings, years)
     while (this.moviePageID < this.currentMoviePageID) {
       this.moviePageID++
-      await this.getLibraryServerMovie(order, orderBy, search, this.moviePageID , true )
+      await this.getLibraryServerMovie(order, orderBy, search, this.moviePageID , ratings, years, true )
     }
     this.loadButton = this.currentMoviePageID < this.movieMaxPageID
   }
-  public async getLibraryTv(order = '', orderBy = '', search = '', reset= false) {
+
+  /**
+   * loads series to library
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} reset
+   * @returns {Promise<void>}
+   */
+  public async getLibraryTv(order = '', orderBy = '', search = '', ratings = '', years = '', reset= false) {
     if (reset) {
       this.currentTvPageID = 1
     }
-    await this.getLibraryServerTv(order, orderBy, search)
+    await this.getLibraryServerTv(order, orderBy, search, 1, ratings, years)
     while (this.tvPageID < this.currentTvPageID) {
       this.tvPageID++
-      await this.getLibraryServerTv(order, orderBy, search, this.tvPageID , true )
+      await this.getLibraryServerTv(order, orderBy, search, this.tvPageID , ratings , years, true )
     }
     this.loadButton = this.currentTvPageID < this.tvMaxPageID
   }
-  private async getLibraryServerMovie(order = '', orderBy = '', search = '', page = 1, append = false ) {
+
+  /**
+   * gets moveLibrary from server
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {number} page
+   * @param {boolean} append
+   * @returns {Promise<void>}
+   */
+  private async getLibraryServerMovie(order = '', orderBy = '', search = '', page = 1, ratings = '', years= '', append = false ) {
     try {
       const response = await this.http.get(this.URL + '/movie', {
         params: {
           page: page,
           order: order,
           orderBy: orderBy,
-          search: search
+          search: search,
+          ratings: ratings,
+          years: years
         }
       }).toPromise()
       if (response.status === 200) {
@@ -111,13 +154,27 @@ export class LibraryService {
       console.error(err)
     }
   }
-  private async getLibraryServerTv(order = '', orderBy = '', search = '', page = 1, append = false ) {
+
+  /**
+   * Gets the library tv from server
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {number} page
+   * @param {string} ratings
+   * @param {string} years
+   * @param {boolean} append
+   * @returns {Promise<void>}
+   */
+  private async getLibraryServerTv(order = '', orderBy = '', search = '', page = 1, ratings = '', years= '', append = false ) {
     try {
       const response = await this.http.get(this.URL + '/tv', { params: {
         page: page,
         order: order,
         orderBy: orderBy,
-        search: search
+        search: search,
+        ratings: ratings,
+        years: years
       }}).toPromise()
       if (response.status === 200) {
         this.reconfigure(response.json(), 'tv', append)
@@ -127,6 +184,12 @@ export class LibraryService {
     }
   }
 
+  /**
+   * creates cardelements from the given data
+   * @param json
+   * @param type
+   * @param {boolean} append
+   */
   private reconfigure(json, type, append = false) {
     switch (type) {
       case('movie'):
@@ -181,16 +244,26 @@ export class LibraryService {
     }
   }
 
-  public async getNext(type, order = '', orderBy = '', search = '') {
+  /**
+   * loads next page
+   * @param type
+   * @param {string} order
+   * @param {string} orderBy
+   * @param {string} search
+   * @param {string} ratings
+   * @param {string} years
+   * @returns {Promise<void>}
+   */
+  public async getNext(type, order = '', orderBy = '', search = '', ratings = '', years= '') {
     if ( type === 'movie') {
       this.moviePageID++
       this.currentMoviePageID++
-      await this.getLibraryServerMovie(order, orderBy, search, this.moviePageID , true )
+      await this.getLibraryServerMovie(order, orderBy, search, this.moviePageID , ratings, years, true )
       this.loadButton =  this.currentMoviePageID < this.movieMaxPageID
     } else {
       this.tvPageID++
       this.currentTvPageID++
-      await this.getLibraryServerTv(order, orderBy, search, this.tvPageID , true )
+      await this.getLibraryServerTv(order, orderBy, search, this.tvPageID , ratings , years, true )
       this.loadButton =  this.currentTvPageID < this.tvMaxPageID
     }
   }

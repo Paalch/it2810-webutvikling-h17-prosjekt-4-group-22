@@ -88,11 +88,27 @@
           <div class="flex_input_container">
             <a class="uk-link">Rating:</a>
             <div class="filter_box">
-              <input class="filter_input" min="0" max="10" step="0.1" type="number" placeholder="From">
+              <input
+                placeholde="From"
+                value="{{fromRating}}"
+                [(ngModel)]="fromrating"
+                (ngModelChange)="onRatingFromChange($event)"
+                [ngModelOptions]="{standalone: true}"
+                class="filter_input"
+                maxlength="4"
+                type="number">
             </div>
             <div class="seperator uk-padding-remove">-</div>
             <div class="filter_box">
-              <input class="filter_input" min="0" max="10" step="0.1" type="number" placeholder="To">
+              <input
+                placeholde="To"
+                value="{{toRating}}"
+                [(ngModel)]="torating"
+                (ngModelChange)="onRatingToChange($event)"
+                [ngModelOptions]="{standalone: true}"
+                class="filter_input"
+                maxlength="4"
+                type="number">
             </div>
           </div>
 
@@ -103,11 +119,27 @@
           <div class="flex_input_container">
             <a class="uk-link">Date:</a>
             <div class="filter_box">
-              <input class="filter_input" min="1900" max="2099" type="number" placeholder="From">
+              <input
+                placeholde="From"
+                value="{{fromDate}}"
+                [(ngModel)]="fromdate"
+                (ngModelChange)="onDateFromChange($event)"
+                [ngModelOptions]="{standalone: true}"
+                class="filter_input"
+                maxlength="4"
+                type="number">
             </div>
             <div class="seperator uk-padding-remove">-</div>
             <div class="filter_box">
-              <input class="filter_input" min="1900" max="2099" type="number" placeholder="To">
+              <input
+                placeholde="To"
+                value="{{toDate}}"
+                [(ngModel)]="todate"
+                (ngModelChange)="onDateToChange($event)"
+                [ngModelOptions]="{standalone: true}"
+                class="filter_input"
+                maxlength="4"
+                type="number">
             </div>
 
           </div>
