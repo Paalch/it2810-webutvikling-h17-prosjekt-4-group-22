@@ -36,7 +36,9 @@ Extended documentation can be found under the URL `/documentation`. Follow link 
 
 Setting up this project for production is quite easy.
 
-You will need `nodejs` version `8.9.0` (LTS) or above with `npm`, and `mongodb` installed and running at port `27017`.
+You will need `nodejs` version `8.9.0` (LTS) or above with `npm`, 
+and `PostgreSQL` installed and running at port `5432` with a database named `it2810-g22-p4-dev`.
+Unless these things are set up, the project wont work!
 
 Then open up a terminal/shell and run the following commands:
 
@@ -78,9 +80,13 @@ npm install
 
 ``` bash
 # Required environment variables
-export P4_TMDB_KEY=<tmdb-api-key> # Not required yet, but will be.
-export P4_AUTH_GOOGLE_KEY=<google-oath2-key>
-export P4_AUTH_GOOGLE_SECRET=<google-oauth2-secret>
+# THESE VALUES ARE PROVIDED FOR YOUR TESTING PURPOSES ONLY.
+# THEY ARE MADE WITH DUMMY USERS AND WILL BE DISCARDED AFTER THE TESTING IS DONE.
+# THEY ARE PROVIDED ONLY TO MAKE IT EASIER FOR YOU TO TEST OUT CODE
+export P4_AUTH_GOOGLE_KEY="900799539371-6ekhk6cdvg8ephfqvuo0prhns8pkknse.apps.googleusercontent.com"
+export P4_AUTH_GOOGLE_SECRET="5YzUSvucaF_hj9TyRf8X4Orr"
+export P4_AUTH_GOOGLE_CALLBACK="http://localhost:8000/auth/google-callback"
+export P4_TMDB_TOKEN="14aaf9ea405e5c25e5a9ed2e6792e35e"
 
 # These variables have default values, but can be overwritten.
 export P4_PORT=<port> # Default = 8000, in production, change to 8084.
