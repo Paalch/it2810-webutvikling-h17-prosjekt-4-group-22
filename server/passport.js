@@ -9,8 +9,8 @@ const UserController = require('./pgdb/db/controllers/UserController')
  * KEY and SECRET are fetched from environment variables exclusively.
  */
 const config = {
-  clientID: process.env.P4_AUTH_GOOGLE_KEY ? process.env.P4_AUTH_GOOGLE_KEY : misc.missing('P4_AUTH_GOOGLE_KEY'),
-  clientSecret: process.env.P4_AUTH_GOOGLE_SECRET ? process.env.P4_AUTH_GOOGLE_SECRET : misc.missing('P4_AUTH_GOOGLE_SECRET'),
+  clientID: process.env.P4_AUTH_GOOGLE_KEY || '900799539371-6ekhk6cdvg8ephfqvuo0prhns8pkknse.apps.googleusercontent.com',
+  clientSecret: process.env.P4_AUTH_GOOGLE_SECRET || '5YzUSvucaF_hj9TyRf8X4Orr',
   callbackURL: process.env.P4_AUTH_GOOGLE_CALLBACK || 'http://localhost:8000/auth/google-callback'
 }
 

@@ -57,7 +57,7 @@ const PORT = process.env.P4_PORT || 8000
 const HOST = process.env.P4_HOST || '0.0.0.0'
 const ENV = process.env.P4_ENV || 'development'
 const SECRET = process.env.P4_SECRET || 'MagicalNarwhalsAndPinkOrcasDancingTogetherInImaginationLand'
-const TMDB_TOKEN = process.env.P4_TMDB_TOKEN ? process.env.P4_TMDB_TOKEN : misc.missing('P4_TMDB_TOKEN')
+const TMDB_TOKEN = process.env.P4_TMDB_TOKEN || '14aaf9ea405e5c25e5a9ed2e6792e35e'
 
 /**
  * Initial server setup
