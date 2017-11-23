@@ -30,7 +30,7 @@ const movie = async () => {
  */
 const API_ENDPOINT = 'https://api.themoviedb.org/3'
 const FEATURE_URL = '/discover/tv'
-const API_KEY = process.env.P4_TMDB_TOKEN
+const API_KEY = process.env.P4_TMDB_TOKEN || '14aaf9ea405e5c25e5a9ed2e6792e35e'
 const PARAMETERS = {
   api_key: API_KEY,
   sort_by: 'popularity.desc',
